@@ -1,0 +1,180 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "id": "27453b07-0910-4653-affb-e68697bbf1a9",
+  "prevIds": [
+    "00000000-0000-0000-0000-000000000000"
+  ],
+  "ddl": [
+    {
+      "name": "products",
+      "entityType": "tables"
+    },
+    {
+      "name": "products_categories",
+      "entityType": "tables"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": true,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "products"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "title",
+      "entityType": "columns",
+      "table": "products"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "description",
+      "entityType": "columns",
+      "table": "products"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "image",
+      "entityType": "columns",
+      "table": "products"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "price",
+      "entityType": "columns",
+      "table": "products"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "categoryId",
+      "entityType": "columns",
+      "table": "products"
+    },
+    {
+      "type": "real",
+      "notNull": false,
+      "autoincrement": false,
+      "default": "0",
+      "generated": null,
+      "name": "rating_rate",
+      "entityType": "columns",
+      "table": "products"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": "0",
+      "generated": null,
+      "name": "rating_count",
+      "entityType": "columns",
+      "table": "products"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": true,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "products_categories"
+    },
+    {
+      "type": "text(128)",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "designation",
+      "entityType": "columns",
+      "table": "products_categories"
+    },
+    {
+      "columns": [
+        "categoryId"
+      ],
+      "tableTo": "products_categories",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "nameExplicit": false,
+      "name": "fk_products_categoryId_products_categories_id_fk",
+      "entityType": "fks",
+      "table": "products"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "products_pk",
+      "table": "products",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "products_categories_pk",
+      "table": "products_categories",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        {
+          "value": "title",
+          "isExpression": false
+        }
+      ],
+      "isUnique": true,
+      "where": null,
+      "origin": "manual",
+      "name": "title_idx",
+      "entityType": "indexes",
+      "table": "products"
+    },
+    {
+      "columns": [
+        {
+          "value": "designation",
+          "isExpression": false
+        }
+      ],
+      "isUnique": true,
+      "where": null,
+      "origin": "manual",
+      "name": "designation_idx",
+      "entityType": "indexes",
+      "table": "products_categories"
+    }
+  ],
+  "renames": []
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "rest-assured",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-04-11",
+  "d1_databases": [
+    {
+      "binding": "assured_d1",
+      "database_name": "assured-d1",
+      "database_id": "fa28b306-9416-480e-9e02-d53c5e3e4afa",
+      "migrations_dir": "drizzle"
+    }
+  ]
+}
