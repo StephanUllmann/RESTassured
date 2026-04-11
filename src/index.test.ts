@@ -1,5 +1,6 @@
-import { describe, expect, test } from 'vitest';
+// @ts-ignore
 import { env } from 'cloudflare:test';
+import { describe, expect, test } from 'vitest';
 import app from './index';
 import { productWithCategorySchema } from './db/schema';
 import z from 'zod';

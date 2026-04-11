@@ -1,4 +1,4 @@
-// src/test-setup.ts
+// @ts-ignore
 import { env } from 'cloudflare:test';
 import { beforeEach } from 'vitest';
 import { drizzle } from 'drizzle-orm/d1';

@@ -3,7 +3,7 @@
     "types": [
       "@cloudflare/workers-types",
       "@cloudflare/vitest-pool-workers",
-      "cloudflare:test",
+      "cloudflare",
     ],
     "target": "ESNext",
     "module": "ESNext",
@@ -14,5 +14,6 @@
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
     "allowImportingTsExtensions": true,
+    "noEmit": true,
   },
 }
