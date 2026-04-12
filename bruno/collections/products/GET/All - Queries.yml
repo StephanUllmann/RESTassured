@@ -5,18 +5,16 @@ info:
 
 http:
   method: GET
-  url: "{{BASE_URL}}/products?maxPrice=24.99&minRating=3.2&maxRating=4"
+  url: "{{BASE_URL}}/products?page=1&minPrice=bla&maxPrice=-24.99&query=merino&minRating=3.2&maxRating=4"
   params:
     - name: page
       value: "1"
       type: query
-      disabled: true
     - name: minPrice
-      value: "3.5"
+      value: bla
       type: query
-      disabled: true
     - name: maxPrice
-      value: "24.99"
+      value: "-24.99"
       type: query
     - name: limit
       value: "2"
@@ -25,7 +23,6 @@ http:
     - name: query
       value: merino
       type: query
-      disabled: true
     - name: category
       value: comp
       type: query

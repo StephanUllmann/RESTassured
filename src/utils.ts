@@ -1,3 +1,8 @@
+import { ValidationTargets } from 'hono';
+import { HTTPException } from 'hono/http-exception';
+import { zValidator as zv } from '@hono/zod-validator';
+import z from 'zod';
+
 type ProductFiltersInput = {
   query?: string;
   minPrice?: number;
@@ -63,3 +68,16 @@ export function getProductFilters({
   if (conditions.length === 1) return conditions[0];
   return { AND: conditions };
 }
+
+export const zValidator = <
+  T extends z.ZodSchema,
+  Target extends keyof ValidationTargets,
+>(
+  target: Target,
+  schema: T
+) =>
+  zv(target, schema, (result, _c) => {
+    if (!result.success) {
+      throw new HTTPException(400, { cause: result.error });
+    }
+  });

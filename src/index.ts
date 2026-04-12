@@ -1,29 +1,15 @@
-import { Hono, ValidationTargets } from 'hono';
+import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { HTTPException } from 'hono/http-exception';
-import { zValidator as zv } from '@hono/zod-validator';
 import { drizzle } from 'drizzle-orm/d1';
 import z, { ZodError } from 'zod';
-import { getPagination, getProductFilters } from './utils';
+import { getPagination, getProductFilters, zValidator } from './utils';
 import {
   insertProductSchema,
   productsCategories,
   relations,
 } from './db/schema';
 import { productQuerySchema } from './schemas';
-
-export const zValidator = <
-  T extends z.ZodSchema,
-  Target extends keyof ValidationTargets,
->(
-  target: Target,
-  schema: T
-) =>
-  zv(target, schema, (result, _c) => {
-    if (!result.success) {
-      throw new HTTPException(400, { cause: result.error });
-    }
-  });
 
 const app = new Hono<{ Bindings: Env }>();
 app.use('/*', cors());
@@ -87,7 +73,11 @@ app.onError((err, c) => {
   if (err instanceof HTTPException) {
     c.status(err.status || 500);
     let message = err.message;
-    if (err.cause instanceof ZodError) message = JSON.parse(err.cause.message);
+    if (err.cause instanceof ZodError) {
+      message = z.prettifyError(err.cause);
+      const zodErrors = z.treeifyError(err.cause);
+      return c.json({ success: false, message, zodErrors });
+    }
     return c.json({ success: false, message });
   }
   console.error(`${err}`);
