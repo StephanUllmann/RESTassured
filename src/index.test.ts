@@ -2,7 +2,11 @@
 import { env } from 'cloudflare:test';
 import { describe, expect, test } from 'vitest';
 import app from './index';
-import { productWithCategorySchema } from './db/schema';
+import {
+  insertProductSchema,
+  productWithCategorySchema,
+  selectCategorySchema,
+} from './db/schema';
 import z from 'zod';
 
 const rootResponseSchema = z.object({
@@ -13,6 +17,20 @@ const rootResponseSchema = z.object({
 
 const parseProducts = (data: unknown) =>
   z.array(productWithCategorySchema).parse(data);
+
+const parseCategories = (data: unknown) =>
+  z.array(selectCategorySchema).parse(data);
+
+const postResponseSchema = z.object({
+  success: z.literal(true),
+  data: insertProductSchema,
+});
+
+const errorResponseSchema = z.object({
+  success: z.literal(false),
+  message: z.unknown(),
+  zodErrors: z.unknown().optional(),
+});
 
 describe('GET /', () => {
   test('returns a success message with the current time', async () => {
@@ -67,6 +85,15 @@ describe('GET /products', () => {
     );
   });
 
+  test('category by path param', async () => {
+    const res = await app.request('/products/category/book', {}, env);
+    expect(res.status).toBe(200);
+
+    const json = parseProducts(await res.json());
+
+    expect(json.every((p) => p.category.designation === 'Books')).toBe(true);
+  });
+
   test('filters by query', async () => {
     const query = 'phone';
     const res = await app.request(`/products?query=${query}`, {}, env);
@@ -100,5 +127,116 @@ describe('GET /products', () => {
           (p.description.includes(query) && p.category.designation === category)
       )
     ).toBe(true);
+  });
+
+  test('filters by minPrice', async () => {
+    const res = await app.request('/products?minPrice=500', {}, env);
+    expect(res.status).toBe(200);
+
+    const json = parseProducts(await res.json());
+
+    expect(json.every((p) => p.price >= 500)).toBe(true);
+  });
+
+  test('filters by maxPrice', async () => {
+    const res = await app.request('/products?maxPrice=100', {}, env);
+    expect(res.status).toBe(200);
+
+    const json = parseProducts(await res.json());
+
+    expect(json.every((p) => p.price <= 100)).toBe(true);
+  });
+
+  test('filters by minRating', async () => {
+    const res = await app.request('/products?minRating=4', {}, env);
+    expect(res.status).toBe(200);
+
+    const json = parseProducts(await res.json());
+
+    expect(json.every((p) => p.ratingRate! >= 4)).toBe(true);
+  });
+
+  test('filters by maxRating', async () => {
+    const res = await app.request('/products?maxRating=3', {}, env);
+    expect(res.status).toBe(200);
+
+    const json = parseProducts(await res.json());
+
+    expect(json.every((p) => p.ratingRate! <= 3)).toBe(true);
+  });
+
+  test('returns 400 for invalid page parameter', async () => {
+    const res = await app.request('/products?page=-1', {}, env);
+    expect(res.status).toBe(400);
+  });
+
+  test('returns 400 for limit exceeding maximum', async () => {
+    const res = await app.request('/products?limit=101', {}, env);
+    expect(res.status).toBe(400);
+  });
+
+  test('returns 400 for invalid rating range', async () => {
+    const res = await app.request('/products?minRating=6', {}, env);
+    expect(res.status).toBe(400);
+  });
+});
+
+describe('GET /products/categories', () => {
+  test('returns all categories', async () => {
+    const res = await app.request('/products/category', {}, env);
+    expect(res.status).toBe(200);
+    const json = parseCategories(await res.json());
+    expect(json.length).toBeGreaterThan(0);
+    expect(json[0].id).toBeDefined();
+    expect(json[0].designation).toBeDefined();
+  });
+});
+
+describe('POST /products', () => {
+  test('successfully add a product', async () => {
+    const newProduct = {
+      title: 'Test Product',
+      description: 'A test product for validation',
+      image: 'https://example.com/image.png',
+      price: 19.99,
+      categoryId: 1,
+    };
+    const res = await app.request(
+      '/products',
+      {
+        method: 'POST',
+        body: JSON.stringify(newProduct),
+        headers: { 'Content-Type': 'application/json' },
+      },
+      env
+    );
+    expect(res.status).toBe(201);
+    const data = await res.json();
+    console.log('DATA:', data);
+    const json = postResponseSchema.parse(data);
+    expect(json.success).toBe(true);
+    expect(json.data.title).toBe(newProduct.title);
+    expect(json.data.description).toBe(newProduct.description);
+    expect(json.data.price).toBe(newProduct.price);
+    expect(json.data.categoryId).toBe(newProduct.categoryId);
+  });
+
+  test('return 400 for invalid request body', async () => {
+    const invalidProduct = {
+      title: 'Invalid Product',
+      price: 'not a number',
+    };
+    const res = await app.request(
+      '/products',
+      {
+        method: 'POST',
+        body: JSON.stringify(invalidProduct),
+        headers: { 'Content-Type': 'application/json' },
+      },
+      env
+    );
+    expect(res.status).toBe(400);
+    const json = errorResponseSchema.parse(await res.json());
+    expect(json.success).toBe(false);
   });
 });

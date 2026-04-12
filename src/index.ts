@@ -64,7 +64,6 @@ app.get('/products/category', async (c) => {
 
 app.post('/products', zValidator('json', insertProductSchema), async (c) => {
   const body = c.req.valid('json');
-
   c.status(201);
   return c.json({ success: true, data: body });
 });
