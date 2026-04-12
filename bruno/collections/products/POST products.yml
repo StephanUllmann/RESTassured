@@ -1,0 +1,25 @@
+info:
+  name: POST products
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{BASE_URL}}/products"
+  body:
+    type: json
+    data: |-
+      {
+        "title": "Ronja rövardotter",
+        "description": "A children's fantasy book by the Swedish author Astrid Lindgren, first published in 1981.",
+        "image": "https://upload.wikimedia.org/wikipedia/en/6/61/Ronia_Robbers_Daughter.png",
+        "price": 12.95,
+        "categoryId": 3
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

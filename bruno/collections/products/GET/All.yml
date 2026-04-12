@@ -1,5 +1,5 @@
 info:
-  name: GET all
+  name: All
   type: http
   seq: 1
 
