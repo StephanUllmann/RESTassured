@@ -5,19 +5,36 @@ info:
 
 http:
   method: GET
-  url: "{{BASE_URL}}/products?page=1&limit=3&category=comp&query=key"
+  url: "{{BASE_URL}}/products?maxPrice=24.99&minRating=3.2&maxRating=4"
   params:
     - name: page
       value: "1"
       type: query
-    - name: limit
-      value: "3"
+      disabled: true
+    - name: minPrice
+      value: "3.5"
       type: query
+      disabled: true
+    - name: maxPrice
+      value: "24.99"
+      type: query
+    - name: limit
+      value: "2"
+      type: query
+      disabled: true
+    - name: query
+      value: merino
+      type: query
+      disabled: true
     - name: category
       value: comp
       type: query
-    - name: query
-      value: key
+      disabled: true
+    - name: minRating
+      value: "3.2"
+      type: query
+    - name: maxRating
+      value: "4"
       type: query
   auth: inherit
 

@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: "{{BASE_URL}}/products/category/:category"
+  url: "{{BASE_URL}}/products/category/:category?maxPrice=300"
   params:
     - name: page
       value: "1"
@@ -19,6 +19,9 @@ http:
       value: phone
       type: query
       disabled: true
+    - name: maxPrice
+      value: "300"
+      type: query
     - name: category
       value: electr
       type: path

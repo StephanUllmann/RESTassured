@@ -1,4 +1,4 @@
-import { Hono, ValidationTargets } from 'hono';
+import { Context, Hono, ValidationTargets } from 'hono';
 import { cors } from 'hono/cors';
 import { HTTPException } from 'hono/http-exception';
 import { zValidator as zv } from '@hono/zod-validator';
@@ -10,6 +10,7 @@ import {
   productsCategories,
   relations,
 } from './db/schema';
+import { productQuerySchema } from './schemas';
 
 export const zValidator = <
   T extends z.ZodSchema,
@@ -18,7 +19,7 @@ export const zValidator = <
   target: Target,
   schema: T
 ) =>
-  zv(target, schema, (result, c) => {
+  zv(target, schema, (result, _c) => {
     if (!result.success) {
       throw new HTTPException(400, { cause: result.error });
     }
@@ -43,37 +44,44 @@ app.get('/', async (c) => {
   });
 });
 
-app.on('GET', ['/products', '/products/category/:category'], async (c) => {
-  const db = drizzle(c.env.assured_d1, { relations });
-  let { page, limit, query, category } = c.req.query();
+app.on(
+  'GET',
+  ['/products', '/products/category/:category'],
+  zValidator('query', productQuerySchema),
+  async (c) => {
+    const db = drizzle(c.env.assured_d1, { relations });
+    const queries = c.req.valid('query');
+    let { category } = queries;
+    const paramsCat = c.req.param('category');
+    if (paramsCat) category = paramsCat;
 
-  const paramsCat = c.req.param('category');
-  if (paramsCat) category = paramsCat;
+    const { safeLimit, offset } = getPagination(queries);
+    const filters = getProductFilters(queries);
 
-  const { safeLimit, offset } = getPagination({ page, limit });
+    let where = null;
+    if (filters && category) {
+      where = {
+        AND: [
+          filters,
+          { category: { designation: { like: `%${category}%` } } },
+        ],
+      };
+    } else if (filters) {
+      where = filters;
+    } else if (category) {
+      where = { category: { designation: { like: `%${category}%` } } };
+    }
 
-  const filters = getProductFilters(query);
-
-  let where = null;
-  if (filters && category) {
-    where = {
-      AND: [filters, { category: { designation: { like: `%${category}%` } } }],
-    };
-  } else if (filters) {
-    where = filters;
-  } else if (category) {
-    where = { category: { designation: { like: `%${category}%` } } };
+    const rows = await db.query.products.findMany({
+      with: { category: true },
+      columns: { categoryId: false },
+      limit: safeLimit,
+      offset,
+      where: where as any,
+    });
+    return c.json(rows);
   }
-
-  const rows = await db.query.products.findMany({
-    with: { category: true },
-    columns: { categoryId: false },
-    limit: safeLimit,
-    offset,
-    where: where as any,
-  });
-  return c.json(rows);
-});
+);
 
 app.get('/products/category', async (c) => {
   const db = drizzle(c.env.assured_d1);
