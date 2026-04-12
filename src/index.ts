@@ -1,4 +1,4 @@
-import { Context, Hono, ValidationTargets } from 'hono';
+import { Hono, ValidationTargets } from 'hono';
 import { cors } from 'hono/cors';
 import { HTTPException } from 'hono/http-exception';
 import { zValidator as zv } from '@hono/zod-validator';
@@ -49,35 +49,22 @@ app.on(
   ['/products', '/products/category/:category'],
   zValidator('query', productQuerySchema),
   async (c) => {
-    const db = drizzle(c.env.assured_d1, { relations });
+    const env = c.env as Env;
+    const db = drizzle(env.assured_d1, { relations });
     const queries = c.req.valid('query');
     let { category } = queries;
     const paramsCat = c.req.param('category');
     if (paramsCat) category = paramsCat;
 
-    const { safeLimit, offset } = getPagination(queries);
-    const filters = getProductFilters(queries);
-
-    let where = null;
-    if (filters && category) {
-      where = {
-        AND: [
-          filters,
-          { category: { designation: { like: `%${category}%` } } },
-        ],
-      };
-    } else if (filters) {
-      where = filters;
-    } else if (category) {
-      where = { category: { designation: { like: `%${category}%` } } };
-    }
+    const { safeLimit: limit, offset } = getPagination(queries);
+    const filters = getProductFilters({ ...queries, category });
 
     const rows = await db.query.products.findMany({
       with: { category: true },
       columns: { categoryId: false },
-      limit: safeLimit,
+      limit,
       offset,
-      where: where as any,
+      where: filters as any,
     });
     return c.json(rows);
   }

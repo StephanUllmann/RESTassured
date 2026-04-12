@@ -4,6 +4,7 @@ type ProductFiltersInput = {
   maxPrice?: number;
   minRating?: number;
   maxRating?: number;
+  category?: string;
 };
 
 export const DEFAULT_ITEM_LIMIT = 10;
@@ -28,6 +29,7 @@ export function getProductFilters({
   maxPrice,
   minRating,
   maxRating,
+  category,
 }: ProductFiltersInput) {
   const conditions: object[] = [];
 
@@ -52,6 +54,9 @@ export function getProductFilters({
   }
   if (maxRating !== undefined) {
     conditions.push({ ratingRate: { lte: maxRating } });
+  }
+  if (category !== undefined) {
+    conditions.push({ category: { designation: { like: `%${category}%` } } });
   }
 
   if (conditions.length === 0) return null;
