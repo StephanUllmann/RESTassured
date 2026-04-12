@@ -1,0 +1,4 @@
+name: local - rest-assured
+variables:
+  - name: BASE_URL
+    value: http://localhost:8787

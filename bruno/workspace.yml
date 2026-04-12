@@ -1,0 +1,16 @@
+opencollection: 1.0.0
+info:
+  name: "rest-assured"
+  type: workspace
+
+collections:
+  - name: "products"
+    path: "collections/products"
+  - name: "utils"
+    path: "collections/utils"
+
+specs:
+
+docs: ''
+
+activeEnvironmentUid: u2sqpt000000000000000

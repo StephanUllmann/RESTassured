@@ -1,0 +1,4 @@
+name: prod - rest-assured
+variables:
+  - name: BASE_URL
+    value: https://rest-assured.stephan-ullmann.workers.dev
