@@ -63,22 +63,6 @@ export const relations = defineRelations(
   })
 );
 
-// export const productsRelations = relations(products, ({ one }) => {
-//   return {
-//     category: one(productsCategories, {
-//       fields: [products.categoryId],
-//       references: [productsCategories.id],
-//     }),
-//   };
-// });
-
-// export const categoriesRelations = relations(
-//   productsCategories,
-//   ({ many }) => ({
-//     products: many(products),
-//   })
-// );
-
 export const insertProductSchema = createInsertSchema(products, {
   image: (schema) => schema.check(z.url()),
 });

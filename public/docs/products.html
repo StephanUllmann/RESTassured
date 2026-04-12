@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>products - API Documentation</title>
+    <style>
+        body { margin: 0; padding: 0; }
+        #opencollection-container { width: 100vw; height: 100vh; }
+    </style>
+    <link rel="stylesheet" href="https://cdn.opencollection.com/docs.css">
+    <script src="https://cdn.opencollection.com/docs.js"></script>
+</head>
+<body>
+    <div id="opencollection-container"></div>
+    <script>
+        const collectionData = "opencollection: 1.0.0\ninfo:\n  name: products\nconfig:\n  proxy:\n    inherit: true\n    config:\n      protocol: http\n      hostname: ''\n      port: ''\n      auth:\n        username: ''\n        password: ''\n      bypassProxy: ''\n  environments:\n    - name: local\n      variables:\n        - name: BASE_URL\n          value: http://localhost:8787\n    - name: prod\n      variables:\n        - name: BASE_URL\n          value: https://rest-assured.stephan-ullmann.workers.dev\nitems:\n  - info:\n      name: GET all\n      type: http\n      seq: 1\n    http:\n      method: GET\n      url: '{{BASE_URL}}/products'\n      auth: inherit\n    settings:\n      encodeUrl: true\n      timeout: 0\n      followRedirects: true\n      maxRedirects: 5\n  - info:\n      name: GET all - queries\n      type: http\n      seq: 2\n    http:\n      method: GET\n      url: '{{BASE_URL}}/products?limit=3&category=comp&query=key'\n      params:\n        - name: page\n          value: '2'\n          type: query\n          disabled: true\n        - name: limit\n          value: '3'\n          type: query\n        - name: category\n          value: comp\n          type: query\n        - name: query\n          value: key\n          type: query\n      auth: inherit\n    settings:\n      encodeUrl: true\n      timeout: 0\n      followRedirects: true\n      maxRedirects: 5\n  - info:\n      name: GET products categories\n      type: http\n      seq: 5\n    http:\n      method: GET\n      url: '{{BASE_URL}}/products/category'\n      auth: inherit\n    settings:\n      encodeUrl: true\n      timeout: 0\n      followRedirects: true\n      maxRedirects: 5\n  - info:\n      name: GET products category path param\n      type: http\n      seq: 7\n    http:\n      method: GET\n      url: '{{BASE_URL}}/products/category/:category?page=2&limit=3'\n      params:\n        - name: page\n          value: '2'\n          type: query\n        - name: limit\n          value: '3'\n          type: query\n        - name: category\n          value: computer\n          type: path\n      auth: inherit\n    settings:\n      encodeUrl: true\n      timeout: 0\n      followRedirects: true\n      maxRedirects: 5\nbundled: true\nextensions:\n  bruno:\n    ignore:\n      - node_modules\n      - .git\n    exportedAt: '2026-04-12T09:02:30.150Z'\n    exportedUsing: Bruno/3.2.2\n";
+        new window.OpenCollection({
+            target: document.getElementById('opencollection-container'),
+            opencollection: collectionData,
+            theme: 'light'
+        });
+    </script>
+</body>
+</html>
