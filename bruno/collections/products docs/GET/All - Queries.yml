@@ -1,0 +1,40 @@
+info:
+  name: All - Queries
+  type: http
+  seq: 3
+
+http:
+  method: GET
+  url: "{{BASE_URL}}/products?page=1&limit=2&category=cloth&query=merino&minPrice=5&maxPrice=24.99&minRating=3.2&maxRating=4"
+  params:
+    - name: page
+      value: "1"
+      type: query
+    - name: limit
+      value: "2"
+      type: query
+    - name: category
+      value: cloth
+      type: query
+    - name: query
+      value: merino
+      type: query
+    - name: minPrice
+      value: "5"
+      type: query
+    - name: maxPrice
+      value: "24.99"
+      type: query
+    - name: minRating
+      value: "3.2"
+      type: query
+    - name: maxRating
+      value: "4"
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

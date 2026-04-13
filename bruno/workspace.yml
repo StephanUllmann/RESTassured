@@ -8,6 +8,8 @@ collections:
     path: "collections/products"
   - name: "utils"
     path: "collections/utils"
+  - name: "products docs"
+    path: "collections/products docs"
 
 specs:
 

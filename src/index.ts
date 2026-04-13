@@ -6,10 +6,12 @@ import z, { ZodError } from 'zod';
 import { getPagination, getProductFilters, zValidator } from './utils';
 import {
   insertProductSchema,
+  products,
   productsCategories,
   relations,
 } from './db/schema';
 import { productQuerySchema } from './schemas';
+import { eq } from 'drizzle-orm';
 
 const app = new Hono<{ Bindings: Env }>();
 app.use('/*', cors());
@@ -56,16 +58,28 @@ app.on(
   }
 );
 
-app.get('/products/category', async (c) => {
+app.get('/products/categories', async (c) => {
   const db = drizzle(c.env.assured_d1);
   const rows = await db.select().from(productsCategories);
+  return c.json(rows);
+});
+
+app.get('/products/:id', async (c) => {
+  const db = drizzle(c.env.assured_d1);
+  const { id } = c.req.param();
+  const rows = await db.select().from(products).where(eq(products.id, +id));
+  if (rows.length === 0)
+    throw new HTTPException(404, { message: `Product Id ${id} not found` });
   return c.json(rows);
 });
 
 app.post('/products', zValidator('json', insertProductSchema), async (c) => {
   const body = c.req.valid('json');
   c.status(201);
-  return c.json({ success: true, data: body });
+  return c.json({
+    success: true,
+    data: { id: Math.round(Math.random() * 123 + 200), ...body },
+  });
 });
 
 app.onError((err, c) => {

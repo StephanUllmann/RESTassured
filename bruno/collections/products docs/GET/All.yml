@@ -1,11 +1,11 @@
 info:
-  name: Products-Categories
+  name: All
   type: http
-  seq: 3
+  seq: 1
 
 http:
   method: GET
-  url: "{{BASE_URL}}/products/25"
+  url: https://rest-assured.stephan-ullmann.workers.dev/products
   auth: inherit
 
 settings:

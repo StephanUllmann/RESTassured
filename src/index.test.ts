@@ -183,7 +183,7 @@ describe('GET /products', () => {
 
 describe('GET /products/categories', () => {
   test('returns all categories', async () => {
-    const res = await app.request('/products/category', {}, env);
+    const res = await app.request('/products/categories', {}, env);
     expect(res.status).toBe(200);
     const json = parseCategories(await res.json());
     expect(json.length).toBeGreaterThan(0);
