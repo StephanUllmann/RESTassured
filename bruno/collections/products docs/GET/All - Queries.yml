@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: "{{BASE_URL}}/products?page=1&limit=2&category=cloth&query=merino&minPrice=5&maxPrice=24.99&minRating=3.2&maxRating=4"
+  url: https://rest-assured.stephan-ullmann.workers.dev/products?page=1&limit=2&category=cloth&query=merino&minPrice=5&maxPrice=24.99&minRating=3.2&maxRating=4
   params:
     - name: page
       value: "1"

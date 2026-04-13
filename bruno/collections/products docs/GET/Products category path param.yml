@@ -5,8 +5,11 @@ info:
 
 http:
   method: GET
-  url: "{{BASE_URL}}/products/category/:category?maxPrice=30"
+  url: https://rest-assured.stephan-ullmann.workers.dev/products/category/:category?maxPrice=30
   params:
+    - name: maxPrice
+      value: "30"
+      type: query
     - name: page
       value: "1"
       type: query
@@ -19,9 +22,6 @@ http:
       value: phone
       type: query
       disabled: true
-    - name: maxPrice
-      value: "30"
-      type: query
     - name: category
       value: book
       type: path

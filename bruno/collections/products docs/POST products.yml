@@ -5,7 +5,7 @@ info:
 
 http:
   method: POST
-  url: "{{BASE_URL}}/products"
+  url: https://rest-assured.stephan-ullmann.workers.dev/products
   body:
     type: json
     data: |-
