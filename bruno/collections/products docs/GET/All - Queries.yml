@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: https://rest-assured.stephan-ullmann.workers.dev/products?page=1&limit=2&category=cloth&query=merino&minPrice=5&maxPrice=24.99&minRating=3.2&maxRating=4
+  url: https://rest-assured.stephan-ullmann.workers.dev/products?page=1&limit=2&category=cloth&query=merino&minPrice=5&maxPrice=2443.99&minRating=1.2&maxRating=4
   params:
     - name: page
       value: "1"
@@ -23,10 +23,10 @@ http:
       value: "5"
       type: query
     - name: maxPrice
-      value: "24.99"
+      value: "2443.99"
       type: query
     - name: minRating
-      value: "3.2"
+      value: "1.2"
       type: query
     - name: maxRating
       value: "4"
